@@ -12,7 +12,7 @@ void setup() {
 
   while(i<180){
     readval=analogRead(readpin);
-    if(done==0){
+    if(flag==0){
       if(readval<last){
         if(readval==580){
           flag=1;
@@ -22,7 +22,7 @@ void setup() {
       }
     }
   
-    if(flag==1){
+    if(done==1){
       Cal[i]=readval;
       i++;
     }
