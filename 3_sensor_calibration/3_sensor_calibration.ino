@@ -1,9 +1,10 @@
+int RPM=6, wait;
 int m1=11, m2=10;                // for motors
 int sp1=A1, sp2=A2, sp3=A3;      // senor pins
 int s1, s2, s3;                  // sensed values
 int flag=0, done=0, last=0;      // will be used for initial calibration
 // initial calibratiion will be done with sensor 1
-
+int sen1[360], sen2[360], sen3[360], i;
 
 
 void setup() {
@@ -13,23 +14,58 @@ void setup() {
   pinMode(sp2, INPUT);
   pinMode(sp3, INPUT);
   Serial.begin(9600);
+  while(i<360){
+    s1 = analogRead(sp1);
+    s2 = analogRead(sp2);
+    s3 = analogRead(sp3);
+    if(done==0){
+      if(s1<last){
+        if(s1==580){
+          flag=1;
+          done=1;
+          Serial.println("Started Recording!");
+        }
+      }
+    }
+
+  if(flag==1){
+      sen1[i]=s1;
+      Serial.print("\nAt ");
+      Serial.print(i);
+      Serial.print(" degree sensor 1 = ");
+      Serial.print(sen1[i]);
+      Serial.print(", sensor 2 = ");
+      Serial.print(sen2[i]);
+      Serial.print(", sensor 3 = ");
+      Serial.print(sen3[i]);
+      i++;
+    }
+    digitalWrite(m1, HIGH);
+    digitalWrite(m2, LOW);
+    // Serial.println(readval);
+    wait = 1000/(6*RPM);
+    delay(wait);
+    last=s1;  
+  }
+  digitalWrite(m1, LOW);
+  digitalWrite(m2, LOW);
 }
 
 void loop() {
-digitalWrite(m1, HIGH);
-digitalWrite(m2, LOW);
-
+//digitalWrite(m1, HIGH);
+//digitalWrite(m2, LOW);
+//
 s1 = analogRead(sp1);
 s2 = analogRead(sp2);
 s3 = analogRead(sp3);
-Serial.println(s1);
-Serial.print(" ");
-Serial.print(s2);
-Serial.print(" ");
-Serial.print(s3);
-Serial.print(" ");
+//Serial.println(s1);
+//Serial.print(" ");
+//Serial.print(s2);
+//Serial.print(" ");
+//Serial.print(s3);
+//Serial.print(" ");
 
 
 
-delay(50);
+delay(200);
 }
