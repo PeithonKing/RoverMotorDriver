@@ -1,0 +1,5 @@
+{
+    "programmer": "Atmel STK500 development board",
+    "board": "arduino:avr:uno",
+    "sketch": "3_sensor_calibration/3_sensor_calibration.ino"
+}

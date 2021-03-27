@@ -22,12 +22,12 @@ digitalWrite(m2, LOW);
 s1 = analogRead(sp1);
 s2 = analogRead(sp2);
 s3 = analogRead(sp3);
-Serial.println(s1);
+Serial.print(s1);
 Serial.print(" ");
 Serial.print(s2);
 Serial.print(" ");
 Serial.print(s3);
-Serial.print(" ");
+Serial.println(" ");
 
 
 
