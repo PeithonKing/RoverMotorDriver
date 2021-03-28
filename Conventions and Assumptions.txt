@@ -1,0 +1,6 @@
+Steering Motors:-
+We should keep the axle side downwards and the terminal side upwards...... then we should define anticlockwise as the positive direction and the clockwise as negative direction and mark the terminals as positive and negative keeping in mind the anticlockwise direction. We will define clockwise motion as negative rotation!
+
+Angle:-
+For the steering motors, zero degree will be defined towards the back of the rover! So, if the rover is going forward, all of its wheels should be at 180 degree position of themselves! This is to make sure that The wheel always keeps in between 0 degree and 360 degree. We have to make sure it never goes beyond this!
+We also have to define the range 90 (180-90) degree to 270 (180+90) degree as the comfortable positions, and the 0 - 90 and 270 - 360 part as the uncomfortable positions. By default our wheel will be at 180 degree position!
