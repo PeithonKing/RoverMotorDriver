@@ -51,7 +51,7 @@ digitalWrite(d, LOW);
 readvalue=analogRead(readpin);
 // V2=(5.0/1023.0)*readvalue;
 Serial.println(readvalue);
-delay(50);
+delay(30);
 
 //if(V2<0.5){
 //  // 0
