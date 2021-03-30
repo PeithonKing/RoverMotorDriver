@@ -1,32 +1,33 @@
 '''
-from modules.trial import *
+import time
+eye = "brown"
+
+class Dog():
+	def __init__(self, name, age):
+		self.name = name
+		self.age = age
+	
+	def sit(self):
+		print("The " + eye + " eyed dog is sitting now!")
+	
+	def stand(self):
+		name = self.name
+		print(name + ", the dog is standing now!")
+		Dog.sit(self)
+
+def st(nam):
+	nam = Dog(nam, 5)
+	nam.sit()
+		
 Jimmy = Dog("Jimmy", 5)
 Jimmy.stand()
-# time.sleep(5)
-st("Jimmy")
+
 '''
-
-from modules.Steering_Motor import *
-import pyfirmata as pf
-import time
-board = pf.Arduino("COM3")
-it = pf.util.Iterator(board)
-it.start()
-
-def start(ID, calpt):
-	ID = Steering_Motor(ID, calpt)
-
-start(fl, calpt)			# Have the value of "calpt" and put here
-start(fr, calpt)
-start(bl, calpt)
-start(br, calpt)
-
-
 while True:
 	command = input("\nWhat should the Rover do?")
 	try: leg, do = command.split(",")
 	except:
-		print("Invalid Input!")
+		print("Invalid Input!1")
 		continue
 	leg = leg.strip().lower()
 	do = do.strip().lower()
@@ -49,19 +50,19 @@ while True:
 		legs.append("fr")
 		legs.append("br")
 	else:
-		print("Invalid Input!")
+		print("Invalid Input!2")
 		continue
 		
-	if do == "status": 
+	if "status" in do: 
 		for leg in legs:
-			leg.status(leg)
-	if "cal" in do:
+			print("Status of " + leg + " is being shown!")
+	elif "cal" in do:
 		for leg in legs:
-			leg.calibrate(leg)
-	if "pos" in do:
+			print(leg + " is being calibrated!")
+	elif "pos" in do:
 		for leg in legs:
-			leg.current_position(leg)
-	if "move" in command:
+			print("Position of " + leg + " is being shown!")
+	elif "move" in command:
 		do = do.replace("move", "").strip()
 		try:
 			theta, direction = do.split(":")
@@ -71,12 +72,13 @@ while True:
 			print("Invalid Input!3")
 			continue
 		for leg in legs:
-			SMmove(leg, int(theta), direction)
+			print(leg + " is being moved through " + theta + " degree " + direction)
 		
 	if "goto" in command:
 		do = do.replace("goto", "").strip()
 		for leg in legs:
-			SMgoto(leg, int(do))
+			print(leg + " is being taken to " + do)
 	else:
-		print("Invalid Input!")
+		print("Invalid Input!4")
 		continue
+

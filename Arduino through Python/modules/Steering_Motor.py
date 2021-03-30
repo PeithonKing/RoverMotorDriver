@@ -11,9 +11,9 @@ mp2 = 10
 
 # Sensor Pins
 # s1, s2 and s3 are used to store the values read from the respective pins!
-sp1=A1
-sp2=A2
-sp3=A3
+sp1 = "A1"
+sp2 = "A2"
+sp3 = "A3"
 
 # Store Calibration Info In Lists
 sen1 = []
@@ -52,13 +52,13 @@ class Steering_Motor():
 		self.ID = ID
 		self.calpt = calpt
 
-	def status(self):
+	def status(self, ID):
 		'''Method to know the state of the motor!'''
-		if ms1 == 1 and ms2 == 0: print("Moving Anticlockwise!")
-		elif ms1 == 0 and ms2 == 1: print("Moving Clockwise!")
-		else: print("Is not moving!")
+		if ms1 == 1 and ms2 == 0: print(ID + " Motor is Moving Anticlockwise!")
+		elif ms1 == 0 and ms2 == 1: print(ID + " Motor is Moving Clockwise!")
+		else: print(ID + " Motor is NOT moving!")
 
-	def calibrate(self): # Please do not read the commented out lines, you would mislead youself!
+	def calibrate(self, ID): # Please do not read the commented out lines, you would mislead youself!
 		'''Method to calibrate the motors'''
 		calpt = self.calpt
 		flag = 0
@@ -79,7 +79,7 @@ class Steering_Motor():
 				sen1.append(s1)
 				sen2.append(s2)
 				sen3.append(s3)
-				print("\nAt " + str(i) + " degree sensor 1 = " + str(s1) + ", sensor 2 = " + str(s2) + ", sensor 3 = " + str(s3) +".")  # comment
+				print("\nAt " + str(sen1.index(s1)) + " degree sensor 1 = " + str(s1) + ", sensor 2 = " + str(s2) + ", sensor 3 = " + str(s3) +".")  # comment
 				# i+=1									# comment
 				last = s1
 				wait = 500/(3*RPM)
@@ -88,7 +88,7 @@ class Steering_Motor():
 		pinlo(mp1)
 		pinlo(mp2)
 
-	def current_position(self):
+	def current_position(self, ID):
 		'''Method to know the current position of the wheel!'''
 		s1 = board.analog[sp1].read()
 		s2 = board.analog[sp2].read()
@@ -102,11 +102,11 @@ class Steering_Motor():
 						return i
 						break
 
-def goto(name, f):			# "f" denotes final position
+def SMgoto(ID, f):			# "f" denotes final position
 	'''Function to take the wheel to a specific position'''
-	name = Steering_Motor(name)	
+	ID = Steering_Motor(ID)	
 	for i in range(3):
-		i = name.current_position()
+		i = ID.current_position()
 		if f < i:
 			pinhi(mp1)
 			pinlo(mp2)		
@@ -120,27 +120,26 @@ def goto(name, f):			# "f" denotes final position
 			pinlo(mp1)
 			pinlo(mp2)
 		
-def move(name, angle, direction):	# Direction takes 2 values, "+" and "-"!
+def SMmove(ID, angle, direction):	# Direction takes 2 values, "+" and "-"!
 	'''Function to move the wheel in some specific
 	direction, for some some specific angle!
 	'''	
-	name = Steering_Motor(name)	
+	ID = Steering_Motor(ID)	
 	for i in range(3):
-		i = name.current_position()
-		if direction = "+":
+		if direction == "+":
 			pinhi(mp1)
 			pinlo(mp2)		
 			time.sleep((500*angle)/(3*RPM))
 			pinlo(mp1)
 			pinlo(mp2)	
-		if direction = "-":
+		if direction == "-":
 			pinhi(mp2)
 			pinlo(mp1)		
 			time.sleep((500*angle)/(3*RPM))
 			pinlo(mp1)
 			pinlo(mp2)
-
-# FrontLeft = Steering_Motor("FL")
-# FrontLeft.status()
-# FrontLeft.calibrate()
-# FrontLeft.status()
+			
+# fl = Steering_Motor("fl")
+# fl.status()
+# fl.calibrate()
+# fl.status()
