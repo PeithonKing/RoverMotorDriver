@@ -6,6 +6,7 @@ RPM = 6
 m1 = "HIGH"     # Connected to the +ve motor pin! (defined in .txt file)
 m2 = "LOW"      # Connected to the -ve motor pin! (defined in .txt file)
 
+
 class motor():
 	'''Defining general properties of steering motors!
 	We are assuming that the sensors are parts of the motors!'''

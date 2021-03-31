@@ -1,5 +1,6 @@
 {
-    "programmer": "Atmel STK500 development board",
+    "programmer": "arduino:avrispmkii",
     "board": "arduino:avr:uno",
-    "sketch": "3_sensor_calibration/3_sensor_calibration.ino"
+    "sketch": "shriman/test.ino",
+    "port": "/dev/tty.usbmodem14501"
 }
