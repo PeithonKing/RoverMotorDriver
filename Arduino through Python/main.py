@@ -5,13 +5,17 @@ Jimmy.stand()
 # time.sleep(5)
 st("Jimmy")
 '''
-
 from modules.Steering_Motor import *
 import pyfirmata as pf
 import time
-board = pf.Arduino("COM3")
-it = pf.util.Iterator(board)
-it.start()
+portf = "COM3"
+portb = "COM4"
+boardf = pf.Arduino(portf)
+boardb = pf.Arduino(portb)
+itf = pf.util.Iterator(boardf)
+itb = pf.util.Iterator(boardb)
+itf.start()
+itb.start()
 
 def start(ID, calpt):
 	ID = Steering_Motor(ID, calpt)

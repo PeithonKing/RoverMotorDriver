@@ -1,38 +1,52 @@
 import pyfirmata as pf
 import time
-board = pf.Arduino("COM3")
-it = pf.util.Iterator(board)
-it.start()
 
-# Defining Motor Pins:- "mp" denotes "motor pins",
-# "ms" (see line 24 and 25) denotes "motor pin state (high/low)"
-mp1 = 11
-mp2 = 10
+portf = "COM3"
+portb = "COM4"
 
-# Sensor Pins
-# s1, s2 and s3 are used to store the values read from the respective pins!
-sp1 = "A1"
-sp2 = "A2"
-sp3 = "A3"
+boardf = pf.Arduino(portf)
+boardb = pf.Arduino(portb)
+itf = pf.util.Iterator(boardf)
+itb = pf.util.Iterator(boardb)
+itf.start()
+itb.start()
 
+# Defining Motor Pins:- 
+# "mp" denotes "motor pins",
+# "ms" denotes "motor pin state(0/1)"
+msfl1 = 0
+msfl2 = 0
+
+msfr1 = 0
+msfr2 = 0
+
+msbl1 = 0
+msbl2 = 0
+
+msbr1 = 0
+msbr2 = 0
+	
 # Store Calibration Info In Lists
-sen1 = []
-sen2 = []
-sen3 = []
+senfl1 = []
+senfl2 = []
+senfl3 = []
 
-RPM = 6
-ms1 = 0					# make it high to rotate anticlockwise(+ve)
-ms2 = 0
+senfr1 = []
+senfr2 = []
+senfr3 = []
 
-def pinhi(pin): 		# function to make a pin HIGH
-	board.digital[pin].write(1)
-	if pin == mp1: ms1 = 1
-	if pin == mp2: ms2 = 1
+senbl1 = []
+senbl2 = []
+senbl3 = []
 
-def pinlo(pin): 		# function to make a pin LOW
-	board.digital[pin].write(0)
-	if pin == mp1: ms1 = 0
-	if pin == mp2: ms2 = 0
+senbr1 = []
+senbr2 = []
+senbr3 = []
+
+RPMfl = 6
+RPMfr = 6
+RPMbl = 6
+RPMbr = 6
 
 class Steering_Motor():
 	'''Defining general properties of steering motors!
@@ -54,6 +68,18 @@ class Steering_Motor():
 
 	def status(self, ID):
 		'''Method to know the state of the motor!'''
+		if ID == "fl": 
+			ms1 = msfl1
+			ms2 = msfl2
+		if ID == "fr":
+			ms1 = msfr1
+			ms2 = msfr2
+		if ID == "bl":
+			ms1 = msbl1
+			ms2 = msbl2
+		if ID == "br":
+			ms1 = msbr1
+			ms2 = msbr2
 		if ms1 == 1 and ms2 == 0: print(ID + " Motor is Moving Anticlockwise!")
 		elif ms1 == 0 and ms2 == 1: print(ID + " Motor is Moving Clockwise!")
 		else: print(ID + " Motor is NOT moving!")
@@ -63,37 +89,115 @@ class Steering_Motor():
 		calpt = self.calpt
 		flag = 0
 		last = 0
-		pinhi(mp1)
-		pinlo(mp2)
-		# i = 0											# comment
-		# s1 = 1000										# comment
+		if ID == "fl":
+			mp1 = 12
+			mp2 = 11
+			sp1 = "A0"
+			sp2 = "A1"
+			sp3 = "A2"
+		if ID == "fr":
+			mp1 = 10
+			mp2 = 9
+			sp1 = "A3"
+			sp2 = "A4"
+			sp3 = "A5"
+		if ID == "bl":
+			mp1 = 8
+			mp2 = 7
+			sp1 = "A0"
+			sp2 = "A1"
+			sp3 = "A2"
+		if ID == "br":
+			mp1 = 6
+			mp2 = 5
+			sp1 = "A3"
+			sp2 = "A4"
+			sp3 = "A5"
+			
+		if ID == "fl" or ID == "fr":
+			boardf.digital[mp1].write(1)
+			if ID == "fl": msfl1 = 1
+			if ID == "fr": msfr1 = 1
+		if ID == "bl" or ID == "br":
+			boardb.digital[mp1].write(1)
+			if ID == "bl": msbl1 = 1
+			if ID == "br": msbr1 = 1
+			
+		if ID == "fl" or ID == "fr":
+			boardf.digital[mp2].write(0)
+			if ID == "fl": msfl2 = 0
+			if ID == "fr": msfr2 = 0
+		if ID == "bl" or ID == "br":
+			boardb.digital[mp2].write(1)
+			if ID == "bl": msbl2 = 0
+			if ID == "br": msbr2 = 0
+			
 		while len(sen1) <= 360:
-			s1 = board.analog[sp1].read()       		# uncomment
-			s2 = board.analog[sp2].read()
-			s3 = board.analog[sp3].read()
-			# s1 -= 1									# comment
+			if ID == "fl" or ID == "fr":
+				s1 = boardf.analog[sp1].read()
+				s2 = boardf.analog[sp2].read()
+				s3 = boardf.analog[sp3].read()
+			if ID == "bl" or ID == "br":
+				s1 = boardb.analog[sp1].read()
+				s2 = boardb.analog[sp2].read()
+				s3 = boardb.analog[sp3].read()
 			if flag == 0 and s1 > last and s1 == calpt:
 				flag = 1
 				print("Started Recording!")
 			if flag == 1:
-				sen1.append(s1)
-				sen2.append(s2)
-				sen3.append(s3)
-				print("\nAt " + str(sen1.index(s1)) + " degree sensor 1 = " + str(s1) + ", sensor 2 = " + str(s2) + ", sensor 3 = " + str(s3) +".")  # comment
-				# i+=1									# comment
+				if ID == "fl":
+					senfl1.append(s1)
+					senfl2.append(s2)
+					senfl3.append(s3)
+				if ID == "fr":
+					senfr1.append(s1)
+					senfr2.append(s2)
+					senfr3.append(s3)
+				if ID == "bl":
+					senbl1.append(s1)
+					senbl2.append(s2)
+					senbl3.append(s3)
+				if ID == "br":
+					senbr1.append(s1)
+					senbr2.append(s2)
+					senbr3.append(s3)
+				# print("\nAt " + str(sen1.index(s1)) + " degree sensor 1 = " + str(s1) + ", sensor 2 = " + str(s2) + ", sensor 3 = " + str(s3) +".")
 				last = s1
+				if ID == "fl": RPM = RPMfl
+				if ID == "fr": RPM = RPMfr
+				if ID == "bl": RPM = RPMbl
+				if ID == "br": RPM = RPMbr
 				wait = 500/(3*RPM)
-				time.sleep(wait/1000)					# uncomment
+				time.sleep(wait/1000)
 		print("Recorded!")
-		pinlo(mp1)
-		pinlo(mp2)
+		if ID == "fl" or ID == "fr":
+			boardf.digital[mp1].write(0)
+			if ID == "fl": msfl1 = 0
+			if ID == "fr": msfr1 = 0
+		if ID == "bl" or ID == "br":
+			boardb.digital[mp1].write(1)
+			if ID == "bl": msbl1 = 0
+			if ID == "br": msbr1 = 0
+			
+		if ID == "fl" or ID == "fr":
+			boardf.digital[mp2].write(0)
+			if ID == "fl": msfl2 = 0
+			if ID == "fr": msfr2 = 0
+		if ID == "bl" or ID == "br":
+			boardb.digital[mp2].write(1)
+			if ID == "bl": msbl2 = 0
+			if ID == "br": msbr2 = 0
 
 	def current_position(self, ID):
 		'''Method to know the current position of the wheel!'''
-		s1 = board.analog[sp1].read()
-		s2 = board.analog[sp2].read()
-		s3 = board.analog[sp3].read()
-
+		if ID == "fl" or ID == "fr":
+			s1 = boardf.analog[sp1].read()
+			s2 = boardf.analog[sp2].read()
+			s3 = boardf.analog[sp3].read()
+		if ID == "bl" or ID == "br":
+			s1 = boardb.analog[sp1].read()
+			s2 = boardb.analog[sp2].read()
+			s3 = boardb.analog[sp3].read()
 		for i in range(360):
 			if s1 > (sen1[i]-2) and s1 < (sen1[i]+2):
 				if s2 > (sen2[i]-2) and s2 < (sen2[i]+2):
@@ -108,36 +212,174 @@ def SMgoto(ID, f):			# "f" denotes final position
 	for i in range(3):
 		i = ID.current_position()
 		if f < i:
-			pinhi(mp1)
-			pinlo(mp2)		
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(1)
+				if ID == "fl": msfl1 = 1
+				if ID == "fr": msfr1 = 1
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 1
+				if ID == "br": msbr1 = 1
+				
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0
+				
+			if ID == "fl": RPM = RPMfl
+			if ID == "fr": RPM = RPMfr
+			if ID == "bl": RPM = RPMbl
+			if ID == "br": RPM = RPMbr					
 			time.sleep((500*(i-f))/(3*RPM))
-			pinlo(mp1)
-			pinlo(mp2)	
+			
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0	
 		if f > i:
-			pinhi(mp2)
-			pinlo(mp1)		
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(1)
+				if ID == "fl": msfl2 = 1
+				if ID == "fr": msfr2 = 1
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 1
+				if ID == "br": msbr2 = 1
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+				
+			if ID == "fl": RPM = RPMfl
+			if ID == "fr": RPM = RPMfr
+			if ID == "bl": RPM = RPMbl
+			if ID == "br": RPM = RPMbr			
 			time.sleep((500*(f-i))/(3*RPM))
-			pinlo(mp1)
-			pinlo(mp2)
+			
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0
 		
-def SMmove(ID, angle, direction):	# Direction takes 2 values, "+" and "-"!
+def SMmove(ID, angle, direction):	# Direction takes 2 values, "c" and "ac"!
 	'''Function to move the wheel in some specific
 	direction, for some some specific angle!
 	'''	
 	ID = Steering_Motor(ID)	
 	for i in range(3):
-		if direction == "+":
-			pinhi(mp1)
-			pinlo(mp2)		
+		if direction == "c":
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(1)
+				if ID == "fl": msfl1 = 1
+				if ID == "fr": msfr1 = 1
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 1
+				if ID == "br": msbr1 = 1
+				
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0
+			
+			if ID == "fl": RPM = RPMfl
+			if ID == "fr": RPM = RPMfr
+			if ID == "bl": RPM = RPMbl
+			if ID == "br": RPM = RPMbr	
 			time.sleep((500*angle)/(3*RPM))
-			pinlo(mp1)
-			pinlo(mp2)	
-		if direction == "-":
-			pinhi(mp2)
-			pinlo(mp1)		
+			
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0
+		if direction == "ac":
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(1)
+				if ID == "fl": msfl2 = 1
+				if ID == "fr": msfr2 = 1
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 1
+				if ID == "br": msbr2 = 1
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+			
+			if ID == "fl": RPM = RPMfl
+			if ID == "fr": RPM = RPMfr
+			if ID == "bl": RPM = RPMbl
+			if ID == "br": RPM = RPMbr		
 			time.sleep((500*angle)/(3*RPM))
-			pinlo(mp1)
-			pinlo(mp2)
+			
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp1].write(0)
+				if ID == "fl": msfl1 = 0
+				if ID == "fr": msfr1 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp1].write(1)
+				if ID == "bl": msbl1 = 0
+				if ID == "br": msbr1 = 0
+			if ID == "fl" or ID == "fr":
+				boardf.digital[mp2].write(0)
+				if ID == "fl": msfl2 = 0
+				if ID == "fr": msfr2 = 0
+			if ID == "bl" or ID == "br":
+				boardb.digital[mp2].write(1)
+				if ID == "bl": msbl2 = 0
+				if ID == "br": msbr2 = 0
 			
 # fl = Steering_Motor("fl")
 # fl.status()

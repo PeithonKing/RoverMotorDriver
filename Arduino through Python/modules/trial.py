@@ -49,6 +49,8 @@ while True:
 	elif leg == "r":
 		legs.append("fr")
 		legs.append("br")
+	elif leg == "a":
+		legs = ["fl", "fr", "bl", "br"]
 	else:
 		print("Invalid Input!2")
 		continue
@@ -74,7 +76,7 @@ while True:
 		for leg in legs:
 			print(leg + " is being moved through " + theta + " degree " + direction)
 		
-	if "goto" in command:
+	elif "goto" in command:
 		do = do.replace("goto", "").strip()
 		for leg in legs:
 			print(leg + " is being taken to " + do)
