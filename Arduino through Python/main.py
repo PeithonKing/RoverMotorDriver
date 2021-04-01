@@ -1,10 +1,3 @@
-'''
-from modules.trial import *
-Jimmy = Dog("Jimmy", 5)
-Jimmy.stand()
-# time.sleep(5)
-st("Jimmy")
-'''
 from modules.Steering_Motor import *
 import pyfirmata as pf
 import time
@@ -17,20 +10,30 @@ itb = pf.util.Iterator(boardb)
 itf.start()
 itb.start()
 
+calptfl = 550
+calptfr = 550
+calptbl = 550
+calptbr = 550
+
 def start(ID, calpt):
 	ID = Steering_Motor(ID, calpt)
 
-start(fl, calpt)			# Have the value of "calpt" and put here
-start(fr, calpt)
-start(bl, calpt)
-start(br, calpt)
+start(fl, calptfl)			# Have the value of "calpt" and put here
+start(fr, calptfr)
+start(bl, calptbl)
+start(br, calptbr)	
+
+RPMfl = 6			# RPM for front Front Left leg
+RPMfr = 6			# RPM for front Front Right leg
+RPMbl = 6			# RPM for front Back Left leg
+RPMbr = 6			# RPM for front Back Right leg
 
 
 while True:
 	command = input("\nWhat should the Rover do?")
 	try: leg, do = command.split(",")
 	except:
-		print("Invalid Input!")
+		print("Invalid Input! 1")
 		continue
 	leg = leg.strip().lower()
 	do = do.strip().lower()
@@ -53,8 +56,10 @@ while True:
 		legs.append("fr")
 		legs.append("br")
 	else:
-		print("Invalid Input!")
+		print("Invalid Input! 2")
 		continue
+		
+	
 		
 	if do == "status": 
 		for leg in legs:
@@ -72,7 +77,7 @@ while True:
 			# print("theta = " + theta)
 			# print("direction = " + direction)			
 		except:
-			print("Invalid Input!3")
+			print("Invalid Input! 3")
 			continue
 		for leg in legs:
 			SMmove(leg, int(theta), direction)
@@ -82,5 +87,5 @@ while True:
 		for leg in legs:
 			SMgoto(leg, int(do))
 	else:
-		print("Invalid Input!")
+		print("Invalid Input! 4")
 		continue
