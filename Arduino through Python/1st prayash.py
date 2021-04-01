@@ -1,10 +1,12 @@
-import pyfirmata as pf
-board = pf.Arduino("COM3")
-it = pf.util.Iterator(board)
+
+from pyfirmata import Arduino, util
+import time
+board = Arduino('/dev/ttyACM0')
+board.digital[13].write(1)
+it = util.Iterator(board)
 it.start()
-
-pin = A3
-
 while True:
-	reading = board.analog[pin].read()
-	print(reading)
+	time.sleep()
+	board.analog[3].enable_reporting()
+	test=board.analog[3].read()
+	print(test)
