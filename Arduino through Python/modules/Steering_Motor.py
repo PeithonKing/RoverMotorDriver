@@ -1,15 +1,15 @@
-import pyfirmata as pf
+from pyfirmata import Arduino, util
 import time
 
 # The name of the ports for the Arduino Boards to be plugged in
-portf = "COM3"			# Port for the arduino for the two front wheels
-portb = "COM4"			# Port for the arduino for the two back wheels
+portf = "/dev/ttyACM0"			# Port for the arduino for the two front wheels
+portb = "/dev/ttyACM1"			# Port for the arduino for the two back wheels
 
 # Initializing the 2 arduino boards
-boardf = pf.Arduino(portf)
-boardb = pf.Arduino(portb)
-itf = pf.util.Iterator(boardf)
-itb = pf.util.Iterator(boardb)
+boardf = Arduino(portf)
+boardb = Arduino(portb)
+itf = util.Iterator(boardf)
+itb = util.Iterator(boardb)
 itf.start()
 itb.start()
 
@@ -44,6 +44,20 @@ senbl3 = []			# Sensor Values for Back Left leg sensor 3
 senbr1 = []			# Sensor Values for Back Right leg sensor 1
 senbr2 = []			# Sensor Values for Back Right leg sensor 2
 senbr3 = []			# Sensor Values for Back Right leg sensor 3
+
+boardf.analog[A0].enable_reporting()
+boardf.analog[A1].enable_reporting()
+boardf.analog[A2].enable_reporting()
+boardf.analog[A3].enable_reporting()
+boardf.analog[A4].enable_reporting()
+boardf.analog[A5].enable_reporting()
+
+boardb.analog[A0].enable_reporting()
+boardb.analog[A1].enable_reporting()
+boardb.analog[A2].enable_reporting()
+boardb.analog[A3].enable_reporting()
+boardb.analog[A4].enable_reporting()
+boardb.analog[A5].enable_reporting()
 
 RPMfl = 6			# RPM for front Front Left leg
 RPMfr = 6			# RPM for front Front Right leg
@@ -453,8 +467,9 @@ def SMmove(ID, angle, direction):	# Direction takes 2 values, "c" and "ac"!
 				boardb.digital[mp2].write(0)
 				if ID == "bl": msbl2 = 0
 				if ID == "br": msbr2 = 0
-			
-# fl = Steering_Motor("fl")
-# fl.status()
-# fl.calibrate()
-# fl.status()
+
+if __name__ == "__main__":			
+	fl = Steering_Motor("fl")
+	fl.status()
+	fl.calibrate()
+	fl.status()

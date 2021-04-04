@@ -1,14 +1,29 @@
 from modules.Steering_Motor import *
-import pyfirmata as pf
+from pyfirmata import Arduino, util
 import time
-portf = "COM3"
-portb = "COM4"
-boardf = pf.Arduino(portf)
-boardb = pf.Arduino(portb)
-itf = pf.util.Iterator(boardf)
-itb = pf.util.Iterator(boardb)
+portf = "/dev/ttyACM0"
+portb = "/dev/ttyACM1"
+boardf = Arduino(portf)
+boardb = Arduino(portb)
+itf = util.Iterator(boardf)
+itb = util.Iterator(boardb)
 itf.start()
 itb.start()
+
+boardf.analog[A0].enable_reporting()
+boardf.analog[A1].enable_reporting()
+boardf.analog[A2].enable_reporting()
+boardf.analog[A3].enable_reporting()
+boardf.analog[A4].enable_reporting()
+boardf.analog[A5].enable_reporting()
+
+boardb.analog[A0].enable_reporting()
+boardb.analog[A1].enable_reporting()
+boardb.analog[A2].enable_reporting()
+boardb.analog[A3].enable_reporting()
+boardb.analog[A4].enable_reporting()
+boardb.analog[A5].enable_reporting()
+
 
 calptfl = 550
 calptfr = 550
@@ -21,7 +36,7 @@ def start(ID, calpt):
 start(fl, calptfl)			# Have the value of "calpt" and put here
 start(fr, calptfr)
 start(bl, calptbl)
-start(br, calptbr)	
+start(br, calptbr)
 
 RPMfl = 6			# RPM for front Front Left leg
 RPMfr = 6			# RPM for front Front Right leg
